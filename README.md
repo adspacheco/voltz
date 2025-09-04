@@ -31,12 +31,11 @@ com.voltz/
 
 ```bash
 # Clonar o repositório
-git clone [URL_DO_REPOSITORIO]
-cd voltz
+git clone https://github.com/adspacheco/voltz
 
 # Criar sua branch pessoal
 git checkout -b feature/nome-rm_numero
-# Exemplo: git checkout -b feature/anderson-559938
+# Exemplo: git checkout -b usuario/anderson-559938
 ```
 
 ### 2. Fluxo de Trabalho Git
