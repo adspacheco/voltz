@@ -52,19 +52,19 @@ git push origin feature/nome-rm_numero
 ## 📝 Tarefas por Membro
 
 ### Anderson (RM 559938)
-- [ ] Implementar classe **Usuario**
-    - [ ] Método cadastrar()
-    - [ ] Método buscar()
-    - [ ] Método atualizar()
-    - [ ] Método deletar()
-    - [ ] Método listar()
+- [x] Implementar classe **Usuario**
+    - [x] Método cadastrar()
+    - [x] Método buscar()
+    - [x] Método atualizar()
+    - [x] Método deletar()
+    - [x] Método listar()
 
-- [ ] Implementar classe **Autenticacao**
-    - [ ] Método login()
-    - [ ] Método logout()
-    - [ ] Método criarSenha()
-    - [ ] Método verificarUsuarioLogado()
-    - [ ] Método alterarSenha()
+- [x] Implementar classe **Autenticacao**
+    - [x] Método login()
+    - [x] Método logout()
+    - [x] Método criarSenha()
+    - [x] Método verificarUsuarioLogado()
+    - [x] Método alterarSenha()
 
 ### Mateus (RM 560064)
 - [ ] Implementar classe **Criptoativo**
