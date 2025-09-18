@@ -35,11 +35,11 @@ public class Main {
 
             switch (opcao) {
                 case 1:
-                    out.println("\n>>> Módulo de Usuários <<<");
+                    menuUsuarios(scanner);
                     break;
 
                 case 2:
-                    out.println("\n>>> Módulo de Autenticação <<<");
+                    menuAutenticacao(scanner);
                     break;
 
                 case 3:
@@ -79,5 +79,118 @@ public class Main {
         }
 
         scanner.close();
+    }
+
+    private static void menuUsuarios(Scanner scanner) {
+        int opcao = 0;
+        
+        while (opcao != 6) {
+            out.println("\n========== MÓDULO USUÁRIOS ==========");
+            out.println("1. Listar usuários");
+            out.println("2. Ver perfil (precisa estar logado)");
+            out.println("3. Atualizar dados (precisa estar logado)");
+            out.println("4. Alterar senha (precisa estar logado)");
+            out.println("5. Desativar conta (precisa estar logado)");
+            out.println("6. Voltar ao menu principal");
+            out.println("=====================================");
+            out.print("Escolha uma opção: ");
+            
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (opcao) {
+                case 1:
+                    listarUsuarios();
+                    break;
+                    
+                case 2:
+                    verPerfil();
+                    break;
+                    
+                case 3:
+                    Autenticacao.atualizarUsuario(scanner);
+                    break;
+                    
+                case 4:
+                    Autenticacao.alterarSenha(scanner);
+                    break;
+                    
+                case 5:
+                    Autenticacao.deletarUsuario();
+                    break;
+                    
+                case 6:
+                    out.println("Voltando ao menu principal...");
+                    break;
+                    
+                default:
+                    out.println("[ERRO] Opção inválida!");
+            }
+        }
+    }
+
+    private static void menuAutenticacao(Scanner scanner) {
+        int opcao = 0;
+        
+        while (opcao != 4) {
+            out.println("\n======= MÓDULO AUTENTICAÇÃO =======");
+            out.println("1. Cadastrar usuário");
+            out.println("2. Fazer login");
+            out.println("3. Fazer logout");
+            out.println("4. Voltar ao menu principal");
+            out.println("===================================");
+            out.print("Escolha uma opção: ");
+            
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+            
+            switch (opcao) {
+                case 1:
+                    Autenticacao.registrarUsuario(scanner);
+                    break;
+                    
+                case 2:
+                    Autenticacao.fazerLogin(scanner);
+                    break;
+                    
+                case 3:
+                    Autenticacao.fazerLogout();
+                    break;
+                    
+                case 4:
+                    out.println("Voltando ao menu principal...");
+                    break;
+                    
+                default:
+                    out.println("[ERRO] Opção inválida!");
+            }
+        }
+    }
+
+    private static void listarUsuarios() {
+        out.println("\n=== LISTA DE USUÁRIOS ===");
+        var usuarios = Autenticacao.listarUsuarios();
+        
+        if (usuarios.isEmpty()) {
+            out.println("Nenhum usuário cadastrado.");
+        } else {
+            for (int i = 0; i < usuarios.size(); i++) {
+                Usuario usuario = usuarios.get(i);
+                out.println((i + 1) + ". " + usuario.getNome() + " (" + usuario.getEmail() + ")");
+            }
+        }
+    }
+
+    private static void verPerfil() {
+        if (Autenticacao.estaLogado()) {
+            Usuario usuario = Autenticacao.getUsuarioLogado();
+            out.println("\n=== MEU PERFIL ===");
+            out.println("Nome: " + usuario.getNome());
+            out.println("Email: " + usuario.getEmail());
+            out.println("CPF: " + usuario.getCpf());
+            out.println("Status: " + (usuario.isAtivo() ? "Ativo" : "Inativo"));
+        } else {
+            out.println("[ERRO] Você precisa estar logado para ver o perfil!");
+        }
     }
 }
