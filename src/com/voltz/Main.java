@@ -51,11 +51,11 @@ public class Main {
                     break;
 
                 case 5:
-                    out.println("\n>>> Módulo de Contas <<<");
+                    menuConta(scanner);
                     break;
 
                 case 6:
-                    out.println("\n>>> Módulo de Carteiras <<<");
+                    menuCarteira(scanner);
                     break;
 
                 case 7:
@@ -191,6 +191,169 @@ public class Main {
             out.println("Status: " + (usuario.isAtivo() ? "Ativo" : "Inativo"));
         } else {
             out.println("[ERRO] Você precisa estar logado para ver o perfil!");
+        }
+    }
+
+    private static void menuConta(Scanner scanner) {
+        int opcao = 0;
+
+        while (opcao != 5) {
+            out.println("\n======= MÓDULO CONTA =======");
+            out.println("1. Criar conta");
+            out.println("2. Listar contas");
+            out.println("3. Depositar");
+            out.println("4. Sacar");
+            out.println("5. Voltar ao menu principal");
+            out.println("===================================");
+            out.print("Escolha uma opção: ");
+
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1 -> Conta.criarConta(scanner);
+                case 2 -> listarContas();
+                case 3 -> depositarConta(scanner);
+                case 4 -> sacarConta(scanner);
+                case 5 -> out.println("Voltando ao menu principal...");
+                default -> out.println("[ERRO] Opção inválida!");
+            }
+        }
+    }
+
+    private static void listarContas() {
+        out.println("\n=== LISTA DE CONTAS ===");
+        var contas = Conta.listarContas();
+
+        if (contas.isEmpty()) {
+            out.println("Nenhuma conta cadastrada.");
+        } else {
+            for (Conta conta : contas) {
+                out.println("ID: " + conta.getId() +
+                        " | Número: " + conta.getNumeroConta() +
+                        " | Saldo: R$ " + conta.getSaldo() +
+                        " | Status: " + (conta.isAtiva() ? "Ativa" : "Inativa"));
+            }
+        }
+    }
+
+    private static void depositarConta(Scanner scanner) {
+        out.print("Número da conta: ");
+        String numero = scanner.nextLine();
+
+        Conta conta = Conta.buscarPorNumero(numero);
+        if (conta == null) {
+            out.println("[ERRO] Conta não encontrada!");
+            return;
+        }
+
+        out.print("Valor do depósito: ");
+        double valor = scanner.nextDouble();
+        scanner.nextLine();
+
+        conta.depositar(valor);
+        out.println("[SUCESSO] Depósito realizado. Novo saldo: R$ " + conta.getSaldo());
+    }
+
+    private static void sacarConta(Scanner scanner) {
+        out.print("Número da conta: ");
+        String numero = scanner.nextLine();
+
+        Conta conta = Conta.buscarPorNumero(numero);
+        if (conta == null) {
+            out.println("[ERRO] Conta não encontrada!");
+            return;
+        }
+
+        out.print("Valor do saque: ");
+        double valor = scanner.nextDouble();
+        scanner.nextLine();
+
+        if (conta.sacar(valor)) {
+            out.println("[SUCESSO] Saque realizado. Novo saldo: R$ " + conta.getSaldo());
+        } else {
+            out.println("[ERRO] Saldo insuficiente!");
+        }
+    }
+
+    private static void menuCarteira(Scanner scanner) {
+        int opcao = 0;
+
+        while (opcao != 5) {
+            out.println("\n======= MÓDULO CARTEIRA =======");
+            out.println("1. Criar carteira");
+            out.println("2. Listar carteiras");
+            out.println("3. Adicionar saldo");
+            out.println("4. Remover saldo");
+            out.println("5. Voltar ao menu principal");
+            out.println("===================================");
+            out.print("Escolha uma opção: ");
+
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1 -> Carteira.criarCarteira(scanner);
+                case 2 -> listarCarteiras();
+                case 3 -> adicionarSaldoCarteira(scanner);
+                case 4 -> removerSaldoCarteira(scanner);
+                case 5 -> out.println("Voltando ao menu principal...");
+                default -> out.println("[ERRO] Opção inválida!");
+            }
+        }
+    }
+
+    private static void listarCarteiras() {
+        out.println("\n=== LISTA DE CARTEIRAS ===");
+        var carteiras = Carteira.listarCarteiras();
+
+        if (carteiras.isEmpty()) {
+            out.println("Nenhuma carteira cadastrada.");
+        } else {
+            for (Carteira carteira : carteiras) {
+                out.println("ID: " + carteira.getId() +
+                        " | Dono: " + carteira.getDono() +
+                        " | Saldo: R$ " + carteira.getSaldo());
+            }
+        }
+    }
+
+    private static void adicionarSaldoCarteira(Scanner scanner) {
+        out.print("Nome do dono: ");
+        String dono = scanner.nextLine();
+
+        Carteira carteira = Carteira.buscarPorDono(dono);
+        if (carteira == null) {
+            out.println("[ERRO] Carteira não encontrada!");
+            return;
+        }
+
+        out.print("Valor a adicionar: ");
+        double valor = scanner.nextDouble();
+        scanner.nextLine();
+
+        carteira.adicionarSaldo(valor);
+        out.println("[SUCESSO] Saldo atualizado. Novo saldo: R$ " + carteira.getSaldo());
+    }
+
+    private static void removerSaldoCarteira(Scanner scanner) {
+        out.print("Nome do dono: ");
+        String dono = scanner.nextLine();
+
+        Carteira carteira = Carteira.buscarPorDono(dono);
+        if (carteira == null) {
+            out.println("[ERRO] Carteira não encontrada!");
+            return;
+        }
+
+        out.print("Valor a remover: ");
+        double valor = scanner.nextDouble();
+        scanner.nextLine();
+
+        if (carteira.removerSaldo(valor)) {
+            out.println("[SUCESSO] Saldo removido. Novo saldo: R$ " + carteira.getSaldo());
+        } else {
+            out.println("[ERRO] Saldo insuficiente!");
         }
     }
 }
