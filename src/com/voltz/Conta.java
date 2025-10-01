@@ -1,76 +1,112 @@
+package com.voltz;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
-package com.voltz;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Conta {
     private static List<Conta> contas = new ArrayList<>();
     private static int contadorId = 1;
 
     private int id;
-    private String numeroConta;
+    private int numero;
+    private String tipo;
     private double saldo;
-    private boolean ativa;
+    private String dataAbertura;
+    private String status;
 
-    public Conta(String numeroConta, double saldoInicial) {
+    public Conta(int numero, String tipo, double saldoInicial) {
         this.id = contadorId++;
-        this.numeroConta = numeroConta;
+        this.numero = numero;
+        this.tipo = tipo;
         this.saldo = saldoInicial;
-        this.ativa = true;
+        this.dataAbertura = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        this.status = "ATIVA";
     }
 
     public int getId() {
         return id;
     }
 
-    public String getNumeroConta() {
-        return numeroConta;
+    public int getNumero() {
+        return numero;
+    }
+
+    public String getTipo() {
+        return tipo;
     }
 
     public double getSaldo() {
         return saldo;
     }
 
+    public String getDataAbertura() {
+        return dataAbertura;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
     public boolean isAtiva() {
-        return ativa;
+        return "ATIVA".equals(status);
     }
 
-    public void depositar(double valor) {
-        this.saldo += valor;
+    public void menuConta() {
+        System.out.println("\n=== MENU CONTA ===");
+        System.out.println("Conta ID: " + id);
+        System.out.println("Número: " + numero);
+        System.out.println("Tipo: " + tipo);
+        System.out.println("Saldo: R$ " + String.format("%.2f", saldo));
+        System.out.println("Data Abertura: " + dataAbertura);
+        System.out.println("Status: " + status);
     }
 
-    public boolean sacar(double valor) {
-        if (valor > saldo) {
-            return false;
-        }
-        this.saldo -= valor;
-        return true;
-    }
-
-    public void desativar() {
-        this.ativa = false;
-    }
-
-    public static Conta criarConta(Scanner scanner) {
-        out.println("\n=== CRIAR CONTA ===");
-
-        out.print("Número da conta: ");
-        String numeroConta = scanner.nextLine();
-
-        out.print("Saldo inicial: ");
-        double saldoInicial = Double.parseDouble(scanner.nextLine());
-
-        Conta conta = new Conta(numeroConta, saldoInicial);
+    public static Conta criar() {
+        System.out.println("\n=== CRIAR CONTA ===");
+        int numero = contadorId * 1000;
+        String tipo = "CORRENTE";
+        double saldoInicial = 0.0;
+        
+        Conta conta = new Conta(numero, tipo, saldoInicial);
         contas.add(conta);
-
-        out.println("[SUCESSO] Conta criada com ID: " + conta.getId());
+        
+        System.out.println("[SUCESSO] Conta criada com ID: " + conta.getId());
         return conta;
     }
 
-    public static Conta buscarPorNumero(String numeroConta) {
+    public void consultar() {
+        menuConta();
+    }
+
+    public void depositar(double valor) {
+        if (valor > 0 && isAtiva()) {
+            this.saldo += valor;
+            System.out.println("[SUCESSO] Depósito de R$ " + String.format("%.2f", valor) + " realizado.");
+        } else {
+            System.out.println("[ERRO] Não foi possível realizar o depósito.");
+        }
+    }
+
+    public boolean sacar(double valor) {
+        if (valor > 0 && valor <= saldo && isAtiva()) {
+            this.saldo -= valor;
+            System.out.println("[SUCESSO] Saque de R$ " + String.format("%.2f", valor) + " realizado.");
+            return true;
+        }
+        System.out.println("[ERRO] Não foi possível realizar o saque.");
+        return false;
+    }
+
+    public void encerrar() {
+        this.status = "ENCERRADA";
+        System.out.println("[SUCESSO] Conta encerrada.");
+    }
+
+    public static Conta buscarPorNumero(int numero) {
         for (Conta conta : contas) {
-            if (conta.getNumeroConta().equals(numeroConta) && conta.isAtiva()) {
+            if (conta.getNumero() == numero && conta.isAtiva()) {
                 return conta;
             }
         }
@@ -81,14 +117,15 @@ public class Conta {
         return new ArrayList<>(contas);
     }
 
-    public static boolean removerConta(String numeroConta) {
-        Conta conta = buscarPorNumero(numeroConta);
-        if (conta != null) {
-            conta.desativar();
-            out.println("[SUCESSO] Conta " + numeroConta + " desativada!");
-            return true;
-        }
-        out.println("[ERRO] Conta não encontrada!");
-        return false;
+    @Override
+    public String toString() {
+        return "Conta{" +
+                "id=" + id +
+                ", numero=" + numero +
+                ", tipo='" + tipo + '\'' +
+                ", saldo=" + saldo +
+                ", dataAbertura='" + dataAbertura + '\'' +
+                ", status='" + status + '\'' +
+                '}';
     }
 }

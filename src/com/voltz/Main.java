@@ -197,13 +197,15 @@ public class Main {
     private static void menuConta(Scanner scanner) {
         int opcao = 0;
 
-        while (opcao != 5) {
+        while (opcao != 7) {
             out.println("\n======= MÓDULO CONTA =======");
             out.println("1. Criar conta");
-            out.println("2. Listar contas");
-            out.println("3. Depositar");
-            out.println("4. Sacar");
-            out.println("5. Voltar ao menu principal");
+            out.println("2. Consultar conta");
+            out.println("3. Listar contas");
+            out.println("4. Depositar");
+            out.println("5. Sacar");
+            out.println("6. Encerrar conta");
+            out.println("7. Voltar ao menu principal");
             out.println("===================================");
             out.print("Escolha uma opção: ");
 
@@ -211,13 +213,28 @@ public class Main {
             scanner.nextLine();
 
             switch (opcao) {
-                case 1 -> Conta.criarConta(scanner);
-                case 2 -> listarContas();
-                case 3 -> depositarConta(scanner);
-                case 4 -> sacarConta(scanner);
-                case 5 -> out.println("Voltando ao menu principal...");
+                case 1 -> Conta.criar();
+                case 2 -> consultarConta(scanner);
+                case 3 -> listarContas();
+                case 4 -> depositarConta(scanner);
+                case 5 -> sacarConta(scanner);
+                case 6 -> encerrarConta(scanner);
+                case 7 -> out.println("Voltando ao menu principal...");
                 default -> out.println("[ERRO] Opção inválida!");
             }
+        }
+    }
+
+    private static void consultarConta(Scanner scanner) {
+        out.print("Número da conta: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        Conta conta = Conta.buscarPorNumero(numero);
+        if (conta != null) {
+            conta.consultar();
+        } else {
+            out.println("[ERRO] Conta não encontrada!");
         }
     }
 
@@ -230,16 +247,18 @@ public class Main {
         } else {
             for (Conta conta : contas) {
                 out.println("ID: " + conta.getId() +
-                        " | Número: " + conta.getNumeroConta() +
-                        " | Saldo: R$ " + conta.getSaldo() +
-                        " | Status: " + (conta.isAtiva() ? "Ativa" : "Inativa"));
+                        " | Número: " + conta.getNumero() +
+                        " | Tipo: " + conta.getTipo() +
+                        " | Saldo: R$ " + String.format("%.2f", conta.getSaldo()) +
+                        " | Status: " + conta.getStatus());
             }
         }
     }
 
     private static void depositarConta(Scanner scanner) {
         out.print("Número da conta: ");
-        String numero = scanner.nextLine();
+        int numero = scanner.nextInt();
+        scanner.nextLine();
 
         Conta conta = Conta.buscarPorNumero(numero);
         if (conta == null) {
@@ -252,12 +271,12 @@ public class Main {
         scanner.nextLine();
 
         conta.depositar(valor);
-        out.println("[SUCESSO] Depósito realizado. Novo saldo: R$ " + conta.getSaldo());
     }
 
     private static void sacarConta(Scanner scanner) {
         out.print("Número da conta: ");
-        String numero = scanner.nextLine();
+        int numero = scanner.nextInt();
+        scanner.nextLine();
 
         Conta conta = Conta.buscarPorNumero(numero);
         if (conta == null) {
@@ -269,23 +288,34 @@ public class Main {
         double valor = scanner.nextDouble();
         scanner.nextLine();
 
-        if (conta.sacar(valor)) {
-            out.println("[SUCESSO] Saque realizado. Novo saldo: R$ " + conta.getSaldo());
+        conta.sacar(valor);
+    }
+
+    private static void encerrarConta(Scanner scanner) {
+        out.print("Número da conta: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        Conta conta = Conta.buscarPorNumero(numero);
+        if (conta != null) {
+            conta.encerrar();
         } else {
-            out.println("[ERRO] Saldo insuficiente!");
+            out.println("[ERRO] Conta não encontrada!");
         }
     }
 
     private static void menuCarteira(Scanner scanner) {
         int opcao = 0;
 
-        while (opcao != 5) {
+        while (opcao != 7) {
             out.println("\n======= MÓDULO CARTEIRA =======");
             out.println("1. Criar carteira");
-            out.println("2. Listar carteiras");
-            out.println("3. Adicionar saldo");
-            out.println("4. Remover saldo");
-            out.println("5. Voltar ao menu principal");
+            out.println("2. Consultar carteira");
+            out.println("3. Listar carteiras");
+            out.println("4. Adicionar cripto");
+            out.println("5. Remover cripto");
+            out.println("6. Obter saldo total");
+            out.println("7. Voltar ao menu principal");
             out.println("===================================");
             out.print("Escolha uma opção: ");
 
@@ -293,13 +323,27 @@ public class Main {
             scanner.nextLine();
 
             switch (opcao) {
-                case 1 -> Carteira.criarCarteira(scanner);
-                case 2 -> listarCarteiras();
-                case 3 -> adicionarSaldoCarteira(scanner);
-                case 4 -> removerSaldoCarteira(scanner);
-                case 5 -> out.println("Voltando ao menu principal...");
+                case 1 -> Carteira.criar();
+                case 2 -> consultarCarteira(scanner);
+                case 3 -> listarCarteiras();
+                case 4 -> adicionarCriptoCarteira(scanner);
+                case 5 -> removerCriptoCarteira(scanner);
+                case 6 -> obterSaldoCarteira(scanner);
+                case 7 -> out.println("Voltando ao menu principal...");
                 default -> out.println("[ERRO] Opção inválida!");
             }
+        }
+    }
+
+    private static void consultarCarteira(Scanner scanner) {
+        out.print("Endereço da carteira: ");
+        String endereco = scanner.nextLine();
+
+        Carteira carteira = Carteira.buscarPorEndereco(endereco);
+        if (carteira != null) {
+            carteira.consultar();
+        } else {
+            out.println("[ERRO] Carteira não encontrada!");
         }
     }
 
@@ -312,48 +356,62 @@ public class Main {
         } else {
             for (Carteira carteira : carteiras) {
                 out.println("ID: " + carteira.getId() +
-                        " | Dono: " + carteira.getDono() +
-                        " | Saldo: R$ " + carteira.getSaldo());
+                        " | Endereço: " + carteira.getEndereco() +
+                        " | Tipo: " + carteira.getTipo() +
+                        " | Ativa: " + (carteira.isAtiva() ? "Sim" : "Não"));
             }
         }
     }
 
-    private static void adicionarSaldoCarteira(Scanner scanner) {
-        out.print("Nome do dono: ");
-        String dono = scanner.nextLine();
+    private static void adicionarCriptoCarteira(Scanner scanner) {
+        out.print("Endereço da carteira: ");
+        String endereco = scanner.nextLine();
 
-        Carteira carteira = Carteira.buscarPorDono(dono);
+        Carteira carteira = Carteira.buscarPorEndereco(endereco);
         if (carteira == null) {
             out.println("[ERRO] Carteira não encontrada!");
             return;
         }
 
-        out.print("Valor a adicionar: ");
-        double valor = scanner.nextDouble();
+        out.print("Símbolo do criptoativo (ex: BTC, ETH): ");
+        String simbolo = scanner.nextLine();
+        
+        out.print("Quantidade: ");
+        double quantidade = scanner.nextDouble();
         scanner.nextLine();
 
-        carteira.adicionarSaldo(valor);
-        out.println("[SUCESSO] Saldo atualizado. Novo saldo: R$ " + carteira.getSaldo());
+        carteira.adicionarCripto(simbolo, quantidade);
     }
 
-    private static void removerSaldoCarteira(Scanner scanner) {
-        out.print("Nome do dono: ");
-        String dono = scanner.nextLine();
+    private static void removerCriptoCarteira(Scanner scanner) {
+        out.print("Endereço da carteira: ");
+        String endereco = scanner.nextLine();
 
-        Carteira carteira = Carteira.buscarPorDono(dono);
+        Carteira carteira = Carteira.buscarPorEndereco(endereco);
         if (carteira == null) {
             out.println("[ERRO] Carteira não encontrada!");
             return;
         }
 
-        out.print("Valor a remover: ");
-        double valor = scanner.nextDouble();
+        out.print("Símbolo do criptoativo: ");
+        String simbolo = scanner.nextLine();
+        
+        out.print("Quantidade a remover: ");
+        double quantidade = scanner.nextDouble();
         scanner.nextLine();
 
-        if (carteira.removerSaldo(valor)) {
-            out.println("[SUCESSO] Saldo removido. Novo saldo: R$ " + carteira.getSaldo());
+        carteira.removerCripto(simbolo, quantidade);
+    }
+
+    private static void obterSaldoCarteira(Scanner scanner) {
+        out.print("Endereço da carteira: ");
+        String endereco = scanner.nextLine();
+
+        Carteira carteira = Carteira.buscarPorEndereco(endereco);
+        if (carteira != null) {
+            carteira.obterSaldo();
         } else {
-            out.println("[ERRO] Saldo insuficiente!");
+            out.println("[ERRO] Carteira não encontrada!");
         }
     }
 }
