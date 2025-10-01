@@ -13,7 +13,7 @@ public class Main {
         out.println("================================================");
         out.println("                   SISTEMA VOLTZ                ");
         out.println("================================================");
-        out.println("Equipe: Anderson, Mateus, Pedro, Rodrigo");
+        out.println("Equipe: Anderson, Mateus, Pedro");
         out.println("------------------------------------------------\n");
 
         while (opcao != 9) {
@@ -31,7 +31,7 @@ public class Main {
             out.print("Escolha uma opção: ");
 
             opcao = scanner.nextInt();
-            scanner.nextLine(); // Limpar buffer
+            scanner.nextLine();
 
             switch (opcao) {
                 case 1:
@@ -59,11 +59,11 @@ public class Main {
                     break;
 
                 case 7:
-                    out.println("\n>>> Módulo de Alertas <<<");
+                    menuAlerta(scanner);
                     break;
 
                 case 8:
-                    out.println("\n>>> Módulo de Relatórios <<<");
+                    menuRelatorio(scanner);
                     break;
 
                 case 9:
@@ -552,5 +552,114 @@ public class Main {
         scanner.nextLine();
 
         Transacao.listarHistoricoPorConta(contaId);
+    }
+
+    private static void menuAlerta(Scanner scanner) {
+        int opcao = 0;
+        Alerta alerta = new Alerta();
+
+        while (opcao != 6) {
+            out.println("\n======= MÓDULO ALERTAS =======");
+            out.println("1. Criar alerta de preço");
+            out.println("2. Verificar alertas");
+            out.println("3. Marcar como lido");
+            out.println("4. Listar todos os alertas");
+            out.println("5. Deletar alerta");
+            out.println("6. Voltar ao menu principal");
+            out.println("===============================");
+            out.print("Escolha uma opção: ");
+
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1 -> criarAlertaPreco(scanner, alerta);
+                case 2 -> verificarAlertas(scanner, alerta);
+                case 3 -> marcarAlertaComoLido(scanner, alerta);
+                case 4 -> alerta.listar();
+                case 5 -> deletarAlerta(scanner, alerta);
+                case 6 -> out.println("Voltando ao menu principal...");
+                default -> out.println("[ERRO] Opção inválida!");
+            }
+        }
+    }
+
+    private static void criarAlertaPreco(Scanner scanner, Alerta alerta) {
+        out.print("Criptoativo (ex: BTC, ETH): ");
+        String criptoativo = scanner.nextLine();
+        
+        out.print("Preço alvo: ");
+        double precoAlvo = scanner.nextDouble();
+        scanner.nextLine();
+        
+        out.print("Tipo de comparação (maior/menor): ");
+        String tipoComparacao = scanner.nextLine();
+
+        alerta.criarAlertaPreco(criptoativo, precoAlvo, tipoComparacao);
+    }
+
+    private static void verificarAlertas(Scanner scanner, Alerta alerta) {
+        out.print("Criptoativo: ");
+        String criptoativo = scanner.nextLine();
+        
+        out.print("Preço atual: ");
+        double precoAtual = scanner.nextDouble();
+        scanner.nextLine();
+
+        alerta.verificarAlertas(criptoativo, precoAtual);
+    }
+
+    private static void marcarAlertaComoLido(Scanner scanner, Alerta alerta) {
+        out.print("ID do alerta: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        alerta.marcarComoLido(id);
+    }
+
+    private static void deletarAlerta(Scanner scanner, Alerta alerta) {
+        out.print("ID do alerta: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        alerta.deletar(id);
+    }
+
+    private static void menuRelatorio(Scanner scanner) {
+        int opcao = 0;
+        Relatorio relatorio = new Relatorio();
+
+        while (opcao != 6) {
+            out.println("\n====== MÓDULO RELATÓRIOS ======");
+            out.println("1. Gerar relatório de saldo");
+            out.println("2. Gerar relatório de transações");
+            out.println("3. Gerar relatório de lucros");
+            out.println("4. Visualizar relatório");
+            out.println("5. Listar todos os relatórios");
+            out.println("6. Voltar ao menu principal");
+            out.println("================================");
+            out.print("Escolha uma opção: ");
+
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1 -> relatorio.relatorioSaldo();
+                case 2 -> relatorio.relatorioTransacoes();
+                case 3 -> relatorio.relatorioLucros();
+                case 4 -> visualizarRelatorio(scanner, relatorio);
+                case 5 -> relatorio.listarTodos();
+                case 6 -> out.println("Voltando ao menu principal...");
+                default -> out.println("[ERRO] Opção inválida!");
+            }
+        }
+    }
+
+    private static void visualizarRelatorio(Scanner scanner, Relatorio relatorio) {
+        out.print("ID do relatório: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        relatorio.visualizar(id);
     }
 }

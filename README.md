@@ -3,10 +3,9 @@
 ## FIAP - Engenharia de Software - 2ESOR
 
 ### Equipe
-- **Anderson Pacheco de Souza** (RM 559938) - Classes: Usuario e Autenticacao
+- **Anderson Pacheco de Souza** (RM 559938) - Classes: Usuario, Autenticacao, Alerta e Relatorio
 - **Mateus Felipe Silva de Macedo** (RM 560064) - Classes: Criptoativo e Transacao
 - **Pedro Cavion Zuffo** (RM 560084) - Classes: Conta e Carteira
-- **Rodrigo Oliveira Maia Piñeiro** (RM 559230) - Classes: Alerta e Relatorio
 
 ## 📂 Estrutura do Projeto
 
@@ -20,8 +19,8 @@ com.voltz/
 ├── Transacao.java      # Mateus
 ├── Conta.java          # Pedro
 ├── Carteira.java       # Pedro  
-├── Alerta.java         # Rodrigo
-├── Relatorio.java      # Rodrigo
+├── Alerta.java         # Anderson
+├── Relatorio.java      # Anderson
 └── README.md           # Este arquivo
 ```
 
@@ -66,47 +65,47 @@ git push origin feature/nome-rm_numero
     - [x] Método verificarUsuarioLogado()
     - [x] Método alterarSenha()
 
-### Mateus (RM 560064)
-- [ ] Implementar classe **Criptoativo**
-    - [ ] Método cadastrar()
-    - [ ] Método buscar()
-    - [ ] Método atualizar()
-    - [ ] Método listarTodos()
-    - [ ] Método obterCotacao()
+- [x] Implementar classe **Alerta**
+    - [x] Método criarAlertaPreco()
+    - [x] Método verificarAlertas()
+    - [x] Método marcarComoLido()
+    - [x] Método listar()
+    - [x] Método deletar()
 
-- [ ] Implementar classe **Transacao**
-    - [ ] Método comprar()
-    - [ ] Método vender()
-    - [ ] Método consultar()
-    - [ ] Método listarHistorico()
-    - [ ] Método cancelar()
+- [x] Implementar classe **Relatorio**
+    - [x] Método relatorioSaldo()
+    - [x] Método relatorioTransacoes()
+    - [x] Método relatorioLucros()
+    - [x] Método visualizar()
+    - [x] Método listarTodos()
+
+### Mateus (RM 560064)
+- [x] Implementar classe **Criptoativo**
+    - [x] Método cadastrar()
+    - [x] Método buscar()
+    - [x] Método atualizar()
+    - [x] Método listarTodos()
+    - [x] Método obterCotacao()
+
+- [x] Implementar classe **Transacao**
+    - [x] Método comprar()
+    - [x] Método vender()
+    - [x] Método consultar()
+    - [x] Método listarHistorico()
+    - [x] Método cancelar()
 
 ### Pedro (RM 560084)
-- [ ] Implementar classe **Conta**
-    - [ ] Método criar()
-    - [ ] Método consultar()
-    - [ ] Método depositar()
-    - [ ] Método sacar()
-    - [ ] Método encerrar()
+- [x] Implementar classe **Conta**
+    - [x] Método criar()
+    - [x] Método consultar()
+    - [x] Método depositar()
+    - [x] Método sacar()
+    - [x] Método encerrar()
 
-- [ ] Implementar classe **Carteira**
-    - [ ] Método criar()
-    - [ ] Método consultar()
-    - [ ] Método adicionarCripto()
-    - [ ] Método removerCripto()
-    - [ ] Método obterSaldo()
+- [x] Implementar classe **Carteira**
+    - [x] Método criar()
+    - [x] Método consultar()
+    - [x] Método adicionarCripto()
+    - [x] Método removerCripto()
+    - [x] Método obterSaldo()
 
-### Rodrigo (RM 559230)
-- [ ] Implementar classe **Alerta**
-    - [ ] Método criarAlertaPreco()
-    - [ ] Método verificarAlertas()
-    - [ ] Método marcarComoLido()
-    - [ ] Método listar()
-    - [ ] Método deletar()
-
-- [ ] Implementar classe **Relatorio**
-    - [ ] Método relatorioSaldo()
-    - [ ] Método relatorioTransacoes()
-    - [ ] Método relatorioLucros()
-    - [ ] Método visualizar()
-    - [ ] Método listarTodos()
