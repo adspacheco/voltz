@@ -43,11 +43,11 @@ public class Main {
                     break;
 
                 case 3:
-                    out.println("\n>>> Módulo de Criptoativos <<<");
+                    menuCriptoativo(scanner);
                     break;
 
                 case 4:
-                    out.println("\n>>> Módulo de Transações <<<");
+                    menuTransacao(scanner);
                     break;
 
                 case 5:
@@ -222,6 +222,7 @@ public class Main {
                 case 7 -> out.println("Voltando ao menu principal...");
                 default -> out.println("[ERRO] Opção inválida!");
             }
+
         }
     }
 
@@ -413,5 +414,143 @@ public class Main {
         } else {
             out.println("[ERRO] Carteira não encontrada!");
         }
+    }
+
+    private static void menuCriptoativo(Scanner scanner) {
+        int opcao = 0;
+
+        while (opcao != 6) {
+            out.println("\n====== MÓDULO CRIPTOATIVOS ======");
+            out.println("1. Cadastrar criptoativo");
+            out.println("2. Buscar criptoativo");
+            out.println("3. Listar todos os criptoativos");
+            out.println("4. Obter cotação");
+            out.println("5. Desativar criptoativo");
+            out.println("6. Voltar ao menu principal");
+            out.println("==================================");
+            out.print("Escolha uma opção: ");
+
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1 -> Criptoativo.cadastrar();
+                case 2 -> buscarCriptoativo(scanner);
+                case 3 -> Criptoativo.listarTodos();
+                case 4 -> obterCotacaoCriptoativo(scanner);
+                case 5 -> desativarCriptoativo(scanner);
+                case 6 -> out.println("Voltando ao menu principal...");
+                default -> out.println("[ERRO] Opção inválida!");
+            }
+        }
+    }
+
+    private static void buscarCriptoativo(Scanner scanner) {
+        out.print("Símbolo do criptoativo (ex: BTC, ETH): ");
+        String simbolo = scanner.nextLine();
+        Criptoativo.buscar(simbolo);
+    }
+
+    private static void obterCotacaoCriptoativo(Scanner scanner) {
+        out.print("Símbolo do criptoativo: ");
+        String simbolo = scanner.nextLine();
+        
+        Criptoativo cripto = Criptoativo.buscar(simbolo);
+        if (cripto != null) {
+            cripto.obterCotacao();
+        }
+    }
+
+    private static void desativarCriptoativo(Scanner scanner) {
+        out.print("Símbolo do criptoativo: ");
+        String simbolo = scanner.nextLine();
+        
+        Criptoativo cripto = Criptoativo.buscar(simbolo);
+        if (cripto != null) {
+            cripto.desativar();
+        }
+    }
+
+    private static void menuTransacao(Scanner scanner) {
+        int opcao = 0;
+
+        while (opcao != 6) {
+            out.println("\n====== MÓDULO TRANSAÇÕES ======");
+            out.println("1. Comprar criptoativo");
+            out.println("2. Vender criptoativo");
+            out.println("3. Consultar transação");
+            out.println("4. Listar histórico");
+            out.println("5. Listar histórico por conta");
+            out.println("6. Voltar ao menu principal");
+            out.println("================================");
+            out.print("Escolha uma opção: ");
+
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1 -> comprarCriptoativo(scanner);
+                case 2 -> venderCriptoativo(scanner);
+                case 3 -> consultarTransacao(scanner);
+                case 4 -> Transacao.listarHistorico();
+                case 5 -> listarHistoricoPorConta(scanner);
+                case 6 -> out.println("Voltando ao menu principal...");
+                default -> out.println("[ERRO] Opção inválida!");
+            }
+        }
+    }
+
+    private static void comprarCriptoativo(Scanner scanner) {
+        out.print("Símbolo do criptoativo: ");
+        String simbolo = scanner.nextLine();
+        
+        out.print("Quantidade: ");
+        double quantidade = scanner.nextDouble();
+        scanner.nextLine();
+        
+        out.print("Cotação: ");
+        double cotacao = scanner.nextDouble();
+        scanner.nextLine();
+        
+        out.print("ID da conta: ");
+        int contaId = scanner.nextInt();
+        scanner.nextLine();
+
+        Transacao.comprar(simbolo, quantidade, cotacao, contaId);
+    }
+
+    private static void venderCriptoativo(Scanner scanner) {
+        out.print("Símbolo do criptoativo: ");
+        String simbolo = scanner.nextLine();
+        
+        out.print("Quantidade: ");
+        double quantidade = scanner.nextDouble();
+        scanner.nextLine();
+        
+        out.print("Cotação: ");
+        double cotacao = scanner.nextDouble();
+        scanner.nextLine();
+        
+        out.print("ID da conta: ");
+        int contaId = scanner.nextInt();
+        scanner.nextLine();
+
+        Transacao.vender(simbolo, quantidade, cotacao, contaId);
+    }
+
+    private static void consultarTransacao(Scanner scanner) {
+        out.print("ID da transação: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        Transacao.consultar(id);
+    }
+
+    private static void listarHistoricoPorConta(Scanner scanner) {
+        out.print("ID da conta: ");
+        int contaId = scanner.nextInt();
+        scanner.nextLine();
+
+        Transacao.listarHistoricoPorConta(contaId);
     }
 }
