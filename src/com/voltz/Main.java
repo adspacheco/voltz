@@ -51,11 +51,11 @@ public class Main {
                     break;
 
                 case 5:
-                    out.println("\n>>> Módulo de Contas <<<");
+                    menuConta(scanner);
                     break;
 
                 case 6:
-                    out.println("\n>>> Módulo de Carteiras <<<");
+                    menuCarteira(scanner);
                     break;
 
                 case 7:
@@ -191,6 +191,227 @@ public class Main {
             out.println("Status: " + (usuario.isAtivo() ? "Ativo" : "Inativo"));
         } else {
             out.println("[ERRO] Você precisa estar logado para ver o perfil!");
+        }
+    }
+
+    private static void menuConta(Scanner scanner) {
+        int opcao = 0;
+
+        while (opcao != 7) {
+            out.println("\n======= MÓDULO CONTA =======");
+            out.println("1. Criar conta");
+            out.println("2. Consultar conta");
+            out.println("3. Listar contas");
+            out.println("4. Depositar");
+            out.println("5. Sacar");
+            out.println("6. Encerrar conta");
+            out.println("7. Voltar ao menu principal");
+            out.println("===================================");
+            out.print("Escolha uma opção: ");
+
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1 -> Conta.criar();
+                case 2 -> consultarConta(scanner);
+                case 3 -> listarContas();
+                case 4 -> depositarConta(scanner);
+                case 5 -> sacarConta(scanner);
+                case 6 -> encerrarConta(scanner);
+                case 7 -> out.println("Voltando ao menu principal...");
+                default -> out.println("[ERRO] Opção inválida!");
+            }
+        }
+    }
+
+    private static void consultarConta(Scanner scanner) {
+        out.print("Número da conta: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        Conta conta = Conta.buscarPorNumero(numero);
+        if (conta != null) {
+            conta.consultar();
+        } else {
+            out.println("[ERRO] Conta não encontrada!");
+        }
+    }
+
+    private static void listarContas() {
+        out.println("\n=== LISTA DE CONTAS ===");
+        var contas = Conta.listarContas();
+
+        if (contas.isEmpty()) {
+            out.println("Nenhuma conta cadastrada.");
+        } else {
+            for (Conta conta : contas) {
+                out.println("ID: " + conta.getId() +
+                        " | Número: " + conta.getNumero() +
+                        " | Tipo: " + conta.getTipo() +
+                        " | Saldo: R$ " + String.format("%.2f", conta.getSaldo()) +
+                        " | Status: " + conta.getStatus());
+            }
+        }
+    }
+
+    private static void depositarConta(Scanner scanner) {
+        out.print("Número da conta: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        Conta conta = Conta.buscarPorNumero(numero);
+        if (conta == null) {
+            out.println("[ERRO] Conta não encontrada!");
+            return;
+        }
+
+        out.print("Valor do depósito: ");
+        double valor = scanner.nextDouble();
+        scanner.nextLine();
+
+        conta.depositar(valor);
+    }
+
+    private static void sacarConta(Scanner scanner) {
+        out.print("Número da conta: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        Conta conta = Conta.buscarPorNumero(numero);
+        if (conta == null) {
+            out.println("[ERRO] Conta não encontrada!");
+            return;
+        }
+
+        out.print("Valor do saque: ");
+        double valor = scanner.nextDouble();
+        scanner.nextLine();
+
+        conta.sacar(valor);
+    }
+
+    private static void encerrarConta(Scanner scanner) {
+        out.print("Número da conta: ");
+        int numero = scanner.nextInt();
+        scanner.nextLine();
+
+        Conta conta = Conta.buscarPorNumero(numero);
+        if (conta != null) {
+            conta.encerrar();
+        } else {
+            out.println("[ERRO] Conta não encontrada!");
+        }
+    }
+
+    private static void menuCarteira(Scanner scanner) {
+        int opcao = 0;
+
+        while (opcao != 7) {
+            out.println("\n======= MÓDULO CARTEIRA =======");
+            out.println("1. Criar carteira");
+            out.println("2. Consultar carteira");
+            out.println("3. Listar carteiras");
+            out.println("4. Adicionar cripto");
+            out.println("5. Remover cripto");
+            out.println("6. Obter saldo total");
+            out.println("7. Voltar ao menu principal");
+            out.println("===================================");
+            out.print("Escolha uma opção: ");
+
+            opcao = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (opcao) {
+                case 1 -> Carteira.criar();
+                case 2 -> consultarCarteira(scanner);
+                case 3 -> listarCarteiras();
+                case 4 -> adicionarCriptoCarteira(scanner);
+                case 5 -> removerCriptoCarteira(scanner);
+                case 6 -> obterSaldoCarteira(scanner);
+                case 7 -> out.println("Voltando ao menu principal...");
+                default -> out.println("[ERRO] Opção inválida!");
+            }
+        }
+    }
+
+    private static void consultarCarteira(Scanner scanner) {
+        out.print("Endereço da carteira: ");
+        String endereco = scanner.nextLine();
+
+        Carteira carteira = Carteira.buscarPorEndereco(endereco);
+        if (carteira != null) {
+            carteira.consultar();
+        } else {
+            out.println("[ERRO] Carteira não encontrada!");
+        }
+    }
+
+    private static void listarCarteiras() {
+        out.println("\n=== LISTA DE CARTEIRAS ===");
+        var carteiras = Carteira.listarCarteiras();
+
+        if (carteiras.isEmpty()) {
+            out.println("Nenhuma carteira cadastrada.");
+        } else {
+            for (Carteira carteira : carteiras) {
+                out.println("ID: " + carteira.getId() +
+                        " | Endereço: " + carteira.getEndereco() +
+                        " | Tipo: " + carteira.getTipo() +
+                        " | Ativa: " + (carteira.isAtiva() ? "Sim" : "Não"));
+            }
+        }
+    }
+
+    private static void adicionarCriptoCarteira(Scanner scanner) {
+        out.print("Endereço da carteira: ");
+        String endereco = scanner.nextLine();
+
+        Carteira carteira = Carteira.buscarPorEndereco(endereco);
+        if (carteira == null) {
+            out.println("[ERRO] Carteira não encontrada!");
+            return;
+        }
+
+        out.print("Símbolo do criptoativo (ex: BTC, ETH): ");
+        String simbolo = scanner.nextLine();
+        
+        out.print("Quantidade: ");
+        double quantidade = scanner.nextDouble();
+        scanner.nextLine();
+
+        carteira.adicionarCripto(simbolo, quantidade);
+    }
+
+    private static void removerCriptoCarteira(Scanner scanner) {
+        out.print("Endereço da carteira: ");
+        String endereco = scanner.nextLine();
+
+        Carteira carteira = Carteira.buscarPorEndereco(endereco);
+        if (carteira == null) {
+            out.println("[ERRO] Carteira não encontrada!");
+            return;
+        }
+
+        out.print("Símbolo do criptoativo: ");
+        String simbolo = scanner.nextLine();
+        
+        out.print("Quantidade a remover: ");
+        double quantidade = scanner.nextDouble();
+        scanner.nextLine();
+
+        carteira.removerCripto(simbolo, quantidade);
+    }
+
+    private static void obterSaldoCarteira(Scanner scanner) {
+        out.print("Endereço da carteira: ");
+        String endereco = scanner.nextLine();
+
+        Carteira carteira = Carteira.buscarPorEndereco(endereco);
+        if (carteira != null) {
+            carteira.obterSaldo();
+        } else {
+            out.println("[ERRO] Carteira não encontrada!");
         }
     }
 }
