@@ -79,6 +79,17 @@ public class Conta {
     public void consultar() {
         menuConta();
     }
+    
+    public void consultar(boolean detalhado) {
+        if (detalhado) {
+            System.out.println("\n=== CONSULTA DETALHADA ====");
+            menuConta();
+            System.out.println("Limite disponível: R$ 5000.00");
+            System.out.println("Taxa de manutenção: R$ 15.00");
+        } else {
+            System.out.println("Conta " + numero + " - Saldo: R$ " + String.format("%.2f", saldo));
+        }
+    }
 
     public void depositar(double valor) {
         if (valor > 0 && isAtiva()) {
@@ -88,11 +99,32 @@ public class Conta {
             System.out.println("[ERRO] Não foi possível realizar o depósito.");
         }
     }
+    
+    public void depositar(double valor, String descricao) {
+        if (valor > 0 && isAtiva()) {
+            this.saldo += valor;
+            System.out.println("[SUCESSO] Depósito de R$ " + String.format("%.2f", valor) + " realizado.");
+            System.out.println("Descrição: " + descricao);
+        } else {
+            System.out.println("[ERRO] Não foi possível realizar o depósito.");
+        }
+    }
 
     public boolean sacar(double valor) {
         if (valor > 0 && valor <= saldo && isAtiva()) {
             this.saldo -= valor;
             System.out.println("[SUCESSO] Saque de R$ " + String.format("%.2f", valor) + " realizado.");
+            return true;
+        }
+        System.out.println("[ERRO] Não foi possível realizar o saque.");
+        return false;
+    }
+    
+    public boolean sacar(double valor, String motivo) {
+        if (valor > 0 && valor <= saldo && isAtiva()) {
+            this.saldo -= valor;
+            System.out.println("[SUCESSO] Saque de R$ " + String.format("%.2f", valor) + " realizado.");
+            System.out.println("Motivo: " + motivo);
             return true;
         }
         System.out.println("[ERRO] Não foi possível realizar o saque.");

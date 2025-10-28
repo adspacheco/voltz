@@ -15,6 +15,44 @@ public class Main {
         out.println("================================================");
         out.println("Equipe: Anderson, Mateus, Pedro");
         out.println("------------------------------------------------\n");
+        
+        try {
+            out.println("Inicializando sistema com exemplos de uso...");
+            
+            new Usuario("Admin", "admin@voltz.com", "12345678900", "senha123");
+            new Usuario("Teste", "teste@voltz.com", "98765432100", "teste456");
+            
+            Conta.criar();
+            Conta.criar();
+            
+            Criptoativo.cadastrar();
+            
+            Carteira.criar();
+            Carteira.criar();
+            
+            TransacaoCompra compraExemplo = new TransacaoCompra("BTC", 0.1, 15000, 1);
+            compraExemplo.processar();
+            Transacao.getTransacoes().add(compraExemplo);
+            
+            TransacaoVenda vendaExemplo = new TransacaoVenda("ETH", 1, 8000, 2);
+            vendaExemplo.calcularLucro(7500);
+            vendaExemplo.processar();
+            Transacao.getTransacoes().add(vendaExemplo);
+            
+            new Alerta("BTC", 140000, "menor");
+            
+            new Relatorio();
+            
+            out.println("Sistema inicializado com sucesso!\n");
+            out.println("Exemplos de classes com herança e polimorfismo:");
+            out.println("- TransacaoCompra e TransacaoVenda herdam de Transacao");
+            out.println("- Métodos processar() e calcularTaxa() sobrescritos (override)");
+            out.println("- Método calcularLucro() sobrecarregado em TransacaoVenda (overload)\n");
+            
+        } catch (Exception e) {
+            out.println("[AVISO] Erro ao inicializar: " + e.getMessage());
+            out.println("Continuando...\n");
+        }
 
         while (opcao != 9) {
             out.println("\n============== MENU PRINCIPAL ===============");
@@ -474,14 +512,16 @@ public class Main {
     private static void menuTransacao(Scanner scanner) {
         int opcao = 0;
 
-        while (opcao != 6) {
+        while (opcao != 8) {
             out.println("\n====== MÓDULO TRANSAÇÕES ======");
-            out.println("1. Comprar criptoativo");
-            out.println("2. Vender criptoativo");
+            out.println("1. Comprar criptoativo (com desconto)");
+            out.println("2. Vender criptoativo (com cálculo de lucro)");
             out.println("3. Consultar transação");
             out.println("4. Listar histórico");
             out.println("5. Listar histórico por conta");
-            out.println("6. Voltar ao menu principal");
+            out.println("6. Demonstrar polimorfismo");
+            out.println("7. Cancelar transação pendente");
+            out.println("8. Voltar ao menu principal");
             out.println("================================");
             out.print("Escolha uma opção: ");
 
@@ -494,48 +534,109 @@ public class Main {
                 case 3 -> consultarTransacao(scanner);
                 case 4 -> Transacao.listarHistorico();
                 case 5 -> listarHistoricoPorConta(scanner);
-                case 6 -> out.println("Voltando ao menu principal...");
+                case 6 -> demonstrarPolimorfismo();
+                case 7 -> cancelarTransacao(scanner);
+                case 8 -> out.println("Voltando ao menu principal...");
                 default -> out.println("[ERRO] Opção inválida!");
             }
         }
     }
 
     private static void comprarCriptoativo(Scanner scanner) {
-        out.print("Símbolo do criptoativo: ");
-        String simbolo = scanner.nextLine();
-        
-        out.print("Quantidade: ");
-        double quantidade = scanner.nextDouble();
-        scanner.nextLine();
-        
-        out.print("Cotação: ");
-        double cotacao = scanner.nextDouble();
-        scanner.nextLine();
-        
-        out.print("ID da conta: ");
-        int contaId = scanner.nextInt();
-        scanner.nextLine();
-
-        Transacao.comprar(simbolo, quantidade, cotacao, contaId);
+        try {
+            out.print("Símbolo do criptoativo: ");
+            String simbolo = scanner.nextLine();
+            
+            out.print("Quantidade: ");
+            double quantidade = scanner.nextDouble();
+            scanner.nextLine();
+            
+            out.print("Cotação: ");
+            double cotacao = scanner.nextDouble();
+            scanner.nextLine();
+            
+            out.print("ID da conta: ");
+            int contaId = scanner.nextInt();
+            scanner.nextLine();
+            
+            out.print("Usar desconto? (s/n): ");
+            String usarDesconto = scanner.nextLine();
+            
+            double valorTotal = quantidade * cotacao;
+            TransacaoCompra compra = new TransacaoCompra(simbolo, quantidade, valorTotal, contaId);
+            
+            if ("s".equalsIgnoreCase(usarDesconto)) {
+                out.print("Percentual de desconto (0-1): ");
+                double desconto = scanner.nextDouble();
+                scanner.nextLine();
+                compra.aplicarDesconto(desconto);
+            }
+            
+            compra.processar();
+            
+            out.println("[SUCESSO] Compra realizada!");
+            out.println("Taxa de compra: " + (compra.getTaxaCompra() * 100) + "%");
+            out.println("Taxa total: R$ " + String.format("%.2f", compra.calcularTaxa()));
+            out.println("Valor final: R$ " + String.format("%.2f", compra.getValor()));
+            out.println("ID da transação: " + compra.getId());
+            
+            Transacao.getTransacoes().add(compra);
+            
+        } catch (Exception e) {
+            out.println("[ERRO] Erro ao processar compra: " + e.getMessage());
+        }
     }
 
     private static void venderCriptoativo(Scanner scanner) {
-        out.print("Símbolo do criptoativo: ");
-        String simbolo = scanner.nextLine();
-        
-        out.print("Quantidade: ");
-        double quantidade = scanner.nextDouble();
-        scanner.nextLine();
-        
-        out.print("Cotação: ");
-        double cotacao = scanner.nextDouble();
-        scanner.nextLine();
-        
-        out.print("ID da conta: ");
-        int contaId = scanner.nextInt();
-        scanner.nextLine();
-
-        Transacao.vender(simbolo, quantidade, cotacao, contaId);
+        try {
+            out.print("Símbolo do criptoativo: ");
+            String simbolo = scanner.nextLine();
+            
+            out.print("Quantidade: ");
+            double quantidade = scanner.nextDouble();
+            scanner.nextLine();
+            
+            out.print("Cotação atual: ");
+            double cotacao = scanner.nextDouble();
+            scanner.nextLine();
+            
+            out.print("ID da conta: ");
+            int contaId = scanner.nextInt();
+            scanner.nextLine();
+            
+            double valorTotal = quantidade * cotacao;
+            TransacaoVenda venda = new TransacaoVenda(simbolo, quantidade, valorTotal, contaId);
+            
+            out.print("Informar preço de compra original? (s/n): ");
+            String informarPrecoCompra = scanner.nextLine();
+            
+            if ("s".equalsIgnoreCase(informarPrecoCompra)) {
+                out.print("Preço de compra original: ");
+                double precoCompra = scanner.nextDouble();
+                scanner.nextLine();
+                venda.calcularLucro(precoCompra, quantidade);
+            }
+            
+            venda.processar();
+            
+            out.println("[SUCESSO] Venda realizada!");
+            out.println("Taxa de venda: " + (venda.getTaxaVenda() * 100) + "%");
+            out.println("Taxa total: R$ " + String.format("%.2f", venda.calcularTaxa()));
+            if (venda.getLucro() != 0) {
+                if (venda.getLucro() > 0) {
+                    out.println("Lucro: R$ " + String.format("%.2f", venda.getLucro()));
+                } else {
+                    out.println("Prejuízo: R$ " + String.format("%.2f", Math.abs(venda.getLucro())));
+                }
+            }
+            out.println("Valor final: R$ " + String.format("%.2f", venda.getValor()));
+            out.println("ID da transação: " + venda.getId());
+            
+            Transacao.getTransacoes().add(venda);
+            
+        } catch (Exception e) {
+            out.println("[ERRO] Erro ao processar venda: " + e.getMessage());
+        }
     }
 
     private static void consultarTransacao(Scanner scanner) {
@@ -661,5 +762,75 @@ public class Main {
         scanner.nextLine();
 
         relatorio.visualizar(id);
+    }
+    
+    private static void cancelarTransacao(Scanner scanner) {
+        try {
+            out.print("ID da transação para cancelar: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();
+            
+            Transacao transacao = null;
+            for (Transacao t : Transacao.getTransacoes()) {
+                if (t.getId() == id) {
+                    transacao = t;
+                    break;
+                }
+            }
+            
+            if (transacao != null) {
+                if (transacao.cancelar()) {
+                    out.println("Transação cancelada com sucesso!");
+                }
+            } else {
+                out.println("[ERRO] Transação não encontrada!");
+            }
+        } catch (Exception e) {
+            out.println("[ERRO] Erro ao cancelar transação: " + e.getMessage());
+        }
+    }
+    
+    private static void demonstrarPolimorfismo() {
+        out.println("\n=== DEMONSTRAÇÃO DE POLIMORFISMO ===");
+        
+        try {
+            out.println("\n1. Criando transações com polimorfismo:");
+            
+            Transacao t1 = new TransacaoCompra("BTC", 0.5, 50000, 1);
+            Transacao t2 = new TransacaoVenda("ETH", 2, 6000, 1);
+            Transacao t3 = new Transacao("TRANSFERENCIA", "USDT", 100, 100, 2);
+            
+            out.println("\n2. Polimorfismo dinâmico (override) - método processar():");
+            t1.processar();
+            t2.processar();
+            t3.processar();
+            
+            out.println("\n3. Polimorfismo dinâmico - método calcularTaxa():");
+            out.println("Taxa TransacaoCompra: R$ " + String.format("%.2f", t1.calcularTaxa()));
+            out.println("Taxa TransacaoVenda: R$ " + String.format("%.2f", t2.calcularTaxa()));
+            out.println("Taxa Transacao base: R$ " + String.format("%.2f", t3.calcularTaxa()));
+            
+            out.println("\n4. Polimorfismo estático (overload) - métodos sobrecarregados:");
+            out.println("calcularTaxa() sem parâmetro: R$ " + String.format("%.2f", t1.calcularTaxa()));
+            out.println("calcularTaxa(0.05) com parâmetro: R$ " + String.format("%.2f", t1.calcularTaxa(0.05)));
+            
+            if (t2 instanceof TransacaoVenda venda) {
+                out.println("\ncalcularLucro com 1 parâmetro:");
+                venda.calcularLucro(5000);
+                out.println("Lucro calculado: R$ " + String.format("%.2f", venda.getLucro()));
+                
+                out.println("\ncalcularLucro com 2 parâmetros:");
+                venda.calcularLucro(2800, 2);
+                out.println("Lucro recalculado: R$ " + String.format("%.2f", venda.getLucro()));
+            }
+            
+            out.println("\n5. Usando toString() polimórfico:");
+            out.println("TransacaoCompra: " + t1.toString());
+            out.println("TransacaoVenda: " + t2.toString());
+            out.println("Transacao base: " + t3.toString());
+            
+        } catch (Exception e) {
+            out.println("[ERRO] Erro na demonstração: " + e.getMessage());
+        }
     }
 }

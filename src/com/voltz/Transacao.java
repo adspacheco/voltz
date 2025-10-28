@@ -6,17 +6,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Transacao {
-    private static List<Transacao> transacoes = new ArrayList<>();
-    private static int contadorId = 1;
+    protected static List<Transacao> transacoes = new ArrayList<>();
+    protected static int contadorId = 1;
 
-    private int id;
-    private String tipo;
-    private String simboloCripto;
-    private double quantidade;
-    private double valor;
-    private LocalDateTime dataHora;
-    private String status;
-    private int contaId;
+    protected int id;
+    protected String tipo;
+    protected String simboloCripto;
+    protected double quantidade;
+    protected double valor;
+    protected LocalDateTime dataHora;
+    protected String status;
+    protected int contaId;
 
     public Transacao(String tipo, String simboloCripto, double quantidade, double valor, int contaId) {
         this.id = contadorId++;
@@ -27,6 +27,19 @@ public class Transacao {
         this.dataHora = LocalDateTime.now();
         this.status = "PENDENTE";
         this.contaId = contaId;
+    }
+    
+    public void processar() {
+        this.status = "CONCLUIDA";
+        System.out.println("Transação processada com sucesso!");
+    }
+    
+    public double calcularTaxa() {
+        return valor * 0.01;
+    }
+    
+    public double calcularTaxa(double percentual) {
+        return valor * percentual;
     }
 
     public int getId() {

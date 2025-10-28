@@ -102,6 +102,15 @@ public class Criptoativo {
         }
         System.out.println("[SUCESSO] Criptoativo " + simbolo + " atualizado.");
     }
+    
+    public void atualizar(double novaCotacao) {
+        System.out.println("\n=== ATUALIZAR COTAÇÃO ===");
+        double cotacaoAnterior = this.cotacao;
+        this.cotacao = novaCotacao;
+        double variacao = ((novaCotacao - cotacaoAnterior) / cotacaoAnterior) * 100;
+        System.out.println("Cotação atualizada: R$ " + String.format("%.2f", novaCotacao));
+        System.out.println("Variação: " + String.format("%.2f", variacao) + "%");
+    }
 
     public static void listarTodos() {
         System.out.println("\n=== LISTAR TODOS OS CRIPTOATIVOS ===");
@@ -128,6 +137,16 @@ public class Criptoativo {
         
         System.out.println("Cotação atual do " + nome + " (" + simbolo + "): R$ " + String.format("%.2f", cotacao));
         return cotacao;
+    }
+    
+    public double obterCotacao(boolean simulada) {
+        if (simulada) {
+            System.out.println("\n=== COTAÇÃO SIMULADA ===");
+            System.out.println("Cotação do " + nome + " (" + simbolo + "): R$ " + String.format("%.2f", cotacao));
+            return cotacao;
+        } else {
+            return obterCotacao();
+        }
     }
 
     public void desativar() {
